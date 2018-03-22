@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+  <repo quality="experimental" status="unofficial">
+    <name>dr</name>
+    <description>experimental ebuilds of misc packages which are not present in the portage tree</description>
+    <homepage>http://gitlab.fuchsbau/fuchsi/overlay</homepage>
+    <owner type="project">
+      <email>perlfuchsi@gmail.com</email>
+      <name>fuchsi</name>
+    </owner>
+    <source type="git">http://gitlab.fuchsbau/fuchsi/overlay.git</source>
+  </repo>
+</repositories>
