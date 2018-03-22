@@ -1,0 +1,5 @@
+cross-armv6j-hardfloat-linux-gnueabi
+cross-i686-glibc-linux-gnu
+cross-i686-pc-linux-gnu
+cross-x86_64-w64-mingw32
+cross-x86_64-w64-mingw64

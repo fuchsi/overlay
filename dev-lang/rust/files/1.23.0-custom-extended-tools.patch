@@ -1,0 +1,154 @@
+From b5e2fe7e48a51ef047887b2e4caa4221a44a6d41 Mon Sep 17 00:00:00 2001
+From: O01eg <o01eg@yandex.ru>
+Date: Mon, 5 Feb 2018 20:10:05 +0300
+Subject: [PATCH] Add build.tools option to manage installation of extended
+ rust tools.
+
+---
+ config.toml.example        |  4 ++++
+ src/bootstrap/config.rs    |  5 ++++-
+ src/bootstrap/configure.py |  1 +
+ src/bootstrap/install.rs   | 30 +++++++++++++++++++++++-------
+ 4 files changed, 32 insertions(+), 8 deletions(-)
+
+diff --git a/config.toml.example b/config.toml.example
+index df0142b8d4..c0285604a5 100644
+--- a/config.toml.example
++++ b/config.toml.example
+@@ -152,6 +152,10 @@
+ # default.
+ #extended = false
+ 
++# Installs choosen set of extended tools if enables. By default builds all.
++# If choosen tool failed to build the installation fails.
++#tools = ["cargo", "rls", "rustfmt", "analysis", "src"]
++
+ # Verbosity level: 0 == not verbose, 1 == verbose, 2 == very verbose
+ #verbose = 0
+ 
+diff --git a/src/bootstrap/config.rs b/src/bootstrap/config.rs
+index 1ca19187cf..6d6544d053 100644
+--- a/src/bootstrap/config.rs
++++ b/src/bootstrap/config.rs
+@@ -13,7 +13,7 @@
+ //! This module implements parsing `config.toml` configuration files to tweak
+ //! how the build runs.
+ 
+-use std::collections::HashMap;
++use std::collections::{HashMap, HashSet};
+ use std::env;
+ use std::fs::File;
+ use std::io::prelude::*;
+@@ -53,6 +53,7 @@ pub struct Config {
+     pub target_config: HashMap<Interned<String>, Target>,
+     pub full_bootstrap: bool,
+     pub extended: bool,
++    pub tools: Option<HashSet<String>>,
+     pub sanitizers: bool,
+     pub profiler: bool,
+     pub ignore_git: bool,
+@@ -188,6 +189,7 @@ struct Build {
+     python: Option<String>,
+     full_bootstrap: Option<bool>,
+     extended: Option<bool>,
++    tools: Option<HashSet<String>>,
+     verbose: Option<usize>,
+     sanitizers: Option<bool>,
+     profiler: Option<bool>,
+@@ -398,6 +400,7 @@ impl Config {
+         set(&mut config.vendor, build.vendor);
+         set(&mut config.full_bootstrap, build.full_bootstrap);
+         set(&mut config.extended, build.extended);
++        config.tools = build.tools;
+         set(&mut config.verbose, build.verbose);
+         set(&mut config.sanitizers, build.sanitizers);
+         set(&mut config.profiler, build.profiler);
+diff --git a/src/bootstrap/configure.py b/src/bootstrap/configure.py
+index 579422c979..d22e53dca3 100755
+--- a/src/bootstrap/configure.py
++++ b/src/bootstrap/configure.py
+@@ -135,6 +135,7 @@ o("jemalloc", "rust.use-jemalloc", "build liballoc with jemalloc")
+ o("full-bootstrap", "build.full-bootstrap", "build three compilers instead of two")
+ o("extended", "build.extended", "build an extended rust tool set")
+ 
++v("tools", "build.tools", "List of extended tools will be installed")
+ v("build", "build.build", "GNUs ./configure syntax LLVM build triple")
+ v("host", None, "GNUs ./configure syntax LLVM host triples")
+ v("target", None, "GNUs ./configure syntax LLVM target triples")
+diff --git a/src/bootstrap/install.rs b/src/bootstrap/install.rs
+index 743f32ece9..20f7d379a6 100644
+--- a/src/bootstrap/install.rs
++++ b/src/bootstrap/install.rs
+@@ -22,6 +22,7 @@ use dist::{self, pkgname, sanitize_sh, tmpdir};
+ 
+ use builder::{Builder, RunConfig, ShouldRun, Step};
+ use cache::Interned;
++use config::Config;
+ 
+ pub fn install_docs(builder: &Builder, stage: u32, host: Interned<String>) {
+     install_sh(builder, "docs", "rust-docs", stage, Some(host));
+@@ -144,6 +145,19 @@ macro_rules! install {
+             pub host: Interned<String>,
+         }
+ 
++        impl $name {
++            #[allow(dead_code)]
++            fn should_build(config: &Config) -> bool {
++                config.extended && config.tools.as_ref()
++                    .map_or(true, |t| t.contains($path))
++            }
++
++            #[allow(dead_code)]
++            fn should_install(builder: &Builder) -> bool {
++                builder.config.tools.as_ref().map_or(false, |t| t.contains($path))
++            }
++        }
++
+         impl Step for $name {
+             type Output = ();
+             const DEFAULT: bool = true;
+@@ -185,32 +199,34 @@ install!((self, builder, _config),
+             install_std(builder, self.stage, *target);
+         }
+     };
+-    Cargo, "cargo", _config.extended, only_hosts: true, {
++    Cargo, "cargo", Self::should_build(_config), only_hosts: true, {
+         builder.ensure(dist::Cargo { stage: self.stage, target: self.target });
+         install_cargo(builder, self.stage, self.target);
+     };
+-    Rls, "rls", _config.extended, only_hosts: true, {
+-        if builder.ensure(dist::Rls { stage: self.stage, target: self.target }).is_some() {
++    Rls, "rls", Self::should_build(_config), only_hosts: true, {
++        if builder.ensure(dist::Rls { stage: self.stage, target: self.target }).is_some() ||
++            Self::should_install(builder) {
+             install_rls(builder, self.stage, self.target);
+         } else {
+             println!("skipping Install RLS stage{} ({})", self.stage, self.target);
+         }
+     };
+-    Rustfmt, "rustfmt", _config.extended, only_hosts: true, {
+-        if builder.ensure(dist::Rustfmt { stage: self.stage, target: self.target }).is_some() {
++    Rustfmt, "rustfmt", Self::should_build(_config), only_hosts: true, {
++        if builder.ensure(dist::Rustfmt { stage: self.stage, target: self.target }).is_some() ||
++            Self::should_install(builder) {
+             install_rustfmt(builder, self.stage, self.target);
+         } else {
+             println!("skipping Install Rustfmt stage{} ({})", self.stage, self.target);
+         }
+     };
+-    Analysis, "analysis", _config.extended, only_hosts: false, {
++    Analysis, "analysis", Self::should_build(_config), only_hosts: false, {
+         builder.ensure(dist::Analysis {
+             compiler: builder.compiler(self.stage, self.host),
+             target: self.target
+         });
+         install_analysis(builder, self.stage, self.target);
+     };
+-    Src, "src", _config.extended, only_hosts: true, {
++    Src, "src", Self::should_build(_config) , only_hosts: true, {
+         builder.ensure(dist::Src);
+         install_src(builder, self.stage);
+     }, ONLY_BUILD;
+-- 
+2.13.6
+

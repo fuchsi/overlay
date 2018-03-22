@@ -1,0 +1,12 @@
+--- raspberrypi-sources-4.13.9999.ebuild.orig	2017-10-26 08:22:53.210845776 +0200
++++ raspberrypi-sources-4.13.9999.ebuild	2017-10-26 08:25:32.840845715 +0200
+@@ -13,8 +13,8 @@
+ 
+ inherit git-r3 versionator
+ EGIT_REPO_URI=https://github.com/raspberrypi/linux.git
+-EGIT_PROJECT="raspberrypi-linux.git"
+ EGIT_BRANCH="rpi-$(get_version_component_range 1-2).y"
++EGIT_CHECKOUT_DIR="${WORKDIR}/linux-${PV}-raspberrypi"
+ 
+ DESCRIPTION="Raspberry PI kernel sources"
+ HOMEPAGE="https://github.com/raspberrypi/linux"

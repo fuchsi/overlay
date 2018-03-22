@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<use>
+		<flag name="utils">Install app-crypt/hashcat-utils</flag>
+		<flag name="amdgpu-pro">Use dev-libs/amdgpu-pro-opencl for opencl</flag>
+	</use>
+</pkgmetadata>
