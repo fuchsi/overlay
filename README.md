@@ -20,6 +20,13 @@ Up to date wine ebuilds
 
 A working [dxvk](https://github.com/doitsujin/dxvk) ebuild *WIP*
 - app-emulation/dxvk-0.42
+**Note**  
+The dxvk has some quirks. It depends on `cross-x86_64-w64-mingw32/mingw64-runtime`, which does not exist in the normal portage tree.  
+You need to install it via crossdev. See the [Gentoo Wiki](https://wiki.gentoo.org/wiki/Mingw) for instructions.  
+
+Also you have to pass `EXTRA_ECONF="--enable-threads=posix"` when emerging `cross-x86_64-w64-mingw32/gcc` to get pthreads in mingw.  
+
+As an extra, you have to emerge app-emulation/dxvk with `FEATURES="-usersandbox"` if it's enabled, or wine shits the bed.
 
 The [libsodium](https://pecl.php.net/libsodium) extension for PHP < 7.2
 - dev-php/pecl-libsodium-1.0.7 for PHP 5.6, 7.0 and 7.1
