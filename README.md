@@ -6,6 +6,7 @@ My *private* Gentoo overlay.
 
 Libressl patches for
 - net-libs/nodejs
+- net-wireless/aircrack-ng
 - net-wireless/hostapd
 - net-wireless/wpa_supplicant
 
