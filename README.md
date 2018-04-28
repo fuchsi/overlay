@@ -17,6 +17,7 @@ My *private* Gentoo overlay.
 ### Up to date wine ebuilds
 - app-emulation/wine-vanilla-3.6
 - app-emulation/wine-vanilla-3.7
+- app-emulation/wine-staging-3.6
 
 ### A working [dxvk](https://github.com/doitsujin/dxvk) ebuild *WIP*
 - app-emulation/dxvk-0.42
