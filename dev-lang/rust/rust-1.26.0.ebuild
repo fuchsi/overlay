@@ -12,31 +12,34 @@ if [[ ${PV} = *beta* ]]; then
 	BETA_SNAPSHOT="${betaver:0:4}-${betaver:4:2}-${betaver:6:2}"
 	MY_P="rustc-beta"
 	SLOT="beta/${PV}"
-	SRC="${BETA_SNAPSHOT}/rustc-beta-src.tar.gz"
+	SRC="${BETA_SNAPSHOT}/rustc-beta-src.tar.xz"
 	KEYWORDS=""
 else
 	ABI_VER="$(get_version_component_range 1-2)"
 	SLOT="stable/${ABI_VER}"
 	MY_P="rustc-${PV}"
-	SRC="${MY_P}-src.tar.gz"
-	KEYWORDS="~amd64 ~x86"
+	SRC="${MY_P}-src.tar.xz"
+	KEYWORDS="~amd64 ~arm64 ~x86"
 fi
 
 CHOST_amd64=x86_64-unknown-linux-gnu
 CHOST_x86=i686-unknown-linux-gnu
+CHOST_arm64=aarch64-unknown-linux-gnu
 
 RUST_STAGE0_VERSION="1.$(($(get_version_component_range 2) - 1)).0"
 RUST_STAGE0_amd64="rust-${RUST_STAGE0_VERSION}-${CHOST_amd64}"
 RUST_STAGE0_x86="rust-${RUST_STAGE0_VERSION}-${CHOST_x86}"
+RUST_STAGE0_arm64="rust-${RUST_STAGE0_VERSION}-${CHOST_arm64}"
 
 CARGO_DEPEND_VERSION="0.$(($(get_version_component_range 2) + 1)).0"
 
 DESCRIPTION="Systems programming language from Mozilla"
 HOMEPAGE="http://www.rust-lang.org/"
 
-SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
-	amd64? ( https://static.rust-lang.org/dist/${RUST_STAGE0_amd64}.tar.gz )
-	x86? ( https://static.rust-lang.org/dist/${RUST_STAGE0_x86}.tar.gz )
+SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.xz
+	amd64? ( https://static.rust-lang.org/dist/${RUST_STAGE0_amd64}.tar.xz )
+	x86? ( https://static.rust-lang.org/dist/${RUST_STAGE0_x86}.tar.xz )
+	arm64? ( https://static.rust-lang.org/dist/${RUST_STAGE0_arm64}.tar.xz )
 "
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
@@ -53,20 +56,12 @@ DEPEND="${RDEPEND}
 	)
 	dev-util/cmake
 "
-PDEPEND=">=dev-util/cargo-${CARGO_DEPEND_VERSION}"
-
-PATCHES=( "${FILESDIR}/1.23.0-separate-libdir.patch" "${FILESDIR}/1.23.0-custom-extended-tools.patch" )
+PDEPEND="!extended? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
 
 S="${WORKDIR}/${MY_P}-src"
 
 toml_usex() {
 	usex "$1" true false
-}
-
-tools_list() {
-    if use extended; then
-        echo 'tools=["rls", "analysis"]'
-    fi
 }
 
 src_prepare() {
@@ -104,10 +99,9 @@ src_configure() {
 		vendor = true
 		verbose = 2
 		extended = $(toml_usex extended)
-		$(tools_list)
 		[install]
 		prefix = "${EPREFIX}/usr"
-		libdir = "$(get_libdir)/${P}"
+		libdir = "$(get_libdir)"
 		docdir = "share/doc/${P}"
 		mandir = "share/${P}/man"
 		[rust]
@@ -136,9 +130,6 @@ src_install() {
 	mv "${D}/usr/bin/rustdoc" "${D}/usr/bin/rustdoc-${PV}" || die
 	mv "${D}/usr/bin/rust-gdb" "${D}/usr/bin/rust-gdb-${PV}" || die
 	mv "${D}/usr/bin/rust-lldb" "${D}/usr/bin/rust-lldb-${PV}" || die
-	if use extended; then
-		mv "${D}/usr/bin/rls" "${D}/usr/bin/rls-${PV}" || die
-	fi
 
 	dodoc COPYRIGHT
 
@@ -153,9 +144,6 @@ src_install() {
 		/usr/bin/rust-gdb
 		/usr/bin/rust-lldb
 	EOF
-	if use extended; then
-		echo "/usr/bin/rls" >> "${T}/provider-${P}"
-	fi
 	dodir /etc/env.d/rust
 	insinto /etc/env.d/rust
 	doins "${T}/provider-${P}"
