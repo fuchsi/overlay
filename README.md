@@ -10,9 +10,9 @@ My *private* Gentoo overlay.
 - net-wireless/aircrack-ng
 
 ### Up to date rust stable ebuilds
-- dev-lang/rust-1.25.0
-- dev-util/cargo-0.26.0
-- virtual/rust-1.25.0
+- dev-lang/rust-1.26.0
+- dev-util/cargo-0.27.0
+- virtual/rust-1.26.0
 
 ### Up to date wine ebuilds
 - app-emulation/wine-vanilla-3.6
