@@ -15,9 +15,8 @@ My *private* Gentoo overlay.
 - virtual/rust-1.26.0
 
 ### Up to date wine ebuilds
-- app-emulation/wine-vanilla-3.6
-- app-emulation/wine-vanilla-3.7
-- app-emulation/wine-staging-3.6
+- app-emulation/wine-vanilla-3.10
+- app-emulation/wine-staging-3.10
 
 ### A working [dxvk](https://github.com/doitsujin/dxvk) ebuild *WIP*
 - app-emulation/dxvk-0.54
