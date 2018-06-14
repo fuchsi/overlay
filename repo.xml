@@ -4,11 +4,11 @@
   <repo quality="experimental" status="unofficial">
     <name>fuchsi</name>
     <description>experimental ebuilds of misc packages which are not present in the portage tree</description>
-    <homepage>https://github.com/fuchsi/overlay</homepage>
+    <homepage>https://gitlab.com/dfuchsi/overlay</homepage>
     <owner type="project">
       <email>perlfuchsi@gmail.com</email>
       <name>fuchsi</name>
     </owner>
-    <source type="git">https://github.com/fuchsi/overlay.git</source>
+    <source type="git">https://gitlab.com/dfuchsi/overlay.git</source>
   </repo>
 </repositories>

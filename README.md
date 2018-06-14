@@ -20,7 +20,7 @@ My *private* Gentoo overlay.
 - app-emulation/wine-staging-3.6
 
 ### A working [dxvk](https://github.com/doitsujin/dxvk) ebuild *WIP*
-- app-emulation/dxvk-0.42
+- app-emulation/dxvk-0.54
 
 **Note**  
 The dxvk has some quirks. It depends on `cross-x86_64-w64-mingw32/mingw64-runtime`, which does not exist in the normal portage tree.  
@@ -42,13 +42,13 @@ As an extra, you have to emerge app-emulation/dxvk with `FEATURES="-usersandbox"
 
 ## Installation
 
-Add `https://github.com/fuchsi/overlay/raw/master/repo.xml` to your overlays list.  
+Add `https://gitlab.com/dfuchsi/overlay/raw/master/repo.xml` to your overlays list.  
 
 /etc/layman/layman.cfg
 ```
 overlays  :
     https://api.gentoo.org/overlays/repositories.xml
-    https://github.com//fuchsi/overlay/raw/master/repo.xml
+    https://gitlab.com/dfuchsi/overlay/raw/master/repo.xml
 ```
 
 Add the overlay via layman
