@@ -14,11 +14,11 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="+abi_x86_32 +abi_x86_64"
 
-RDEPEND=">=app-emulation/wine-vanilla-3.5[vulkan]
+RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
     dev-util/glslang
     >=media-libs/mesa-18[vulkan]"
 DEPEND="${RDEPEND}
-dev-util/meson
+>=dev-util/meson-0.43
 cross-x86_64-w64-mingw32/mingw64-runtime[libraries]
 dev-util/ninja"
 
