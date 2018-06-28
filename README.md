@@ -19,7 +19,7 @@ My *private* Gentoo overlay.
 - app-emulation/wine-staging-3.10
 
 ### A working [dxvk](https://github.com/doitsujin/dxvk) ebuild *WIP*
-- app-emulation/dxvk-0.60
+- app-emulation/dxvk-0.61
 
 **Note**  
 The dxvk has some quirks. It depends on `cross-x86_64-w64-mingw32/mingw64-runtime`, which does not exist in the normal portage tree.  
