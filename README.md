@@ -7,6 +7,7 @@ My *private* Gentoo overlay.
 
 ### Libressl patches for
 - net-libs/nodejs
+    - nodejs-10.5.0 uses the bundled openssl library
 - net-wireless/aircrack-ng
 
 ### Up to date rust stable ebuilds
