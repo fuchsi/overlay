@@ -16,7 +16,7 @@ IUSE="+abi_x86_32 +abi_x86_64 video_cards_amdgpu video_cards_nvidia"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
     dev-util/glslang
-    video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan,video_cards_amdgpu] )
+    video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan] )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
 >=dev-util/meson-0.43
