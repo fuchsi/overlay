@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer type="project">
+    <email>perlfuchsi@gmail.com</email>
+    <name>Daniel Müller</name>
+  </maintainer>
+  <longdescription>
+    A Vulkan-based compatibility layer for Direct3D 11 which allows running 3D applications on Linux using Wine.
+  </longdescription>
+</pkgmetadata>
