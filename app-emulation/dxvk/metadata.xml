@@ -5,7 +5,13 @@
     <email>perlfuchsi@gmail.com</email>
     <name>Daniel Müller</name>
   </maintainer>
+  <upstream>
+    <remote-id type="github">doitsujin/dxvk</remote-id>
+  </upstream>
   <longdescription>
     A Vulkan-based compatibility layer for Direct3D 11 which allows running 3D applications on Linux using Wine.
   </longdescription>
+  <use>    
+    <flag name="layers">Build the vulkan validation layers</flag>
+  </use>
 </pkgmetadata>
