@@ -12,15 +12,18 @@ SRC_URI="https://github.com/doitsujin/dxvk/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="ZLIB"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+abi_x86_32 +abi_x86_64"
+IUSE="+abi_x86_32 +abi_x86_64 video_cards_amdgpu video_cards_nvidia"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
     dev-util/glslang
-    >=media-libs/mesa-18[vulkan]"
+    video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan] )
+    video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
 >=dev-util/meson-0.43
 cross-x86_64-w64-mingw32/mingw64-runtime[libraries]
 dev-util/ninja"
+
+REQUIRED_USE="^^ ( video_cards_amdgpu video_cards_nvidia )"
 
 src_configure() {
     local mesonargs=(
@@ -49,10 +52,8 @@ src_configure() {
     "$@" || die
 }
 
-#src_install() {
-#    local DXVK_ARCH="64"
-#    if use abi_x86_32; then
-#        DXVK_ARCH="32"
-#    fi
-#    doexe install.${DXVK_ARCH}/bin/setup_dxvk.sh
-#}
+pkg_postinst() {
+    elog "You will need to set up your WINEPREFIX for DXVK."
+    elog "To do so, you need to run /usr/bin/setup_dxvk.sh"
+    elog "with your WINEPREFIX set."
+}
