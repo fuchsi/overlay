@@ -12,18 +12,20 @@ SRC_URI="https://github.com/doitsujin/dxvk/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="ZLIB"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+abi_x86_32 +abi_x86_64 video_cards_amdgpu video_cards_nvidia"
+IUSE="+abi_x86_32 +abi_x86_64 layers video_cards_amdgpu video_cards_intel video_cards_nvidia"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
     dev-util/glslang
+    layers? ( media-libs/vulkan-layers )
     video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan] )
+    video_cards_intel? ( >=media-libs/mesa-18[vulkan] )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
 >=dev-util/meson-0.43
 cross-x86_64-w64-mingw32/mingw64-runtime[libraries]
 dev-util/ninja"
 
-REQUIRED_USE="^^ ( video_cards_amdgpu video_cards_nvidia )"
+REQUIRED_USE="^^ ( video_cards_amdgpu video_cards_intel video_cards_nvidia )"
 
 src_configure() {
     local mesonargs=(
