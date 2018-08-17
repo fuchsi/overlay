@@ -15,6 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="+abi_x86_32 +abi_x86_64 layers video_cards_amdgpu video_cards_intel video_cards_nvidia"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
+    app-emulation/winetricks
     dev-util/glslang
     layers? ( media-libs/vulkan-layers )
     video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan] )
@@ -54,8 +55,15 @@ src_configure() {
     "$@" || die
 }
 
+src_install() {
+    meson_src_install
+    insinto "/usr/share/dxvk"
+    doins "utils/setup_dxvk.verb"
+}
+
 pkg_postinst() {
     elog "You will need to set up your WINEPREFIX for DXVK."
-    elog "To do so, you need to run /usr/bin/setup_dxvk.sh"
-    elog "with your WINEPREFIX set."
+    elog "To do so, you need to run"
+    elog "export WINEPREFIX=/path/to/.wine-prefix"
+    elog "winetricks --force /usr/share/setup_dxvk.verb"
 }
