@@ -55,15 +55,8 @@ src_configure() {
     "$@" || die
 }
 
-src_install() {
-    meson_src_install
-    insinto "/usr/share/dxvk"
-    doins "utils/setup_dxvk.verb"
-}
-
 pkg_postinst() {
     elog "You will need to set up your WINEPREFIX for DXVK."
-    elog "To do so, you need to run"
-    elog "export WINEPREFIX=/path/to/.wine-prefix"
-    elog "winetricks --force /usr/share/setup_dxvk.verb"
+    elog "To do so, you need to run /usr/bin/setup_dxvk.sh"
+    elog "with your WINEPREFIX set."
 }
