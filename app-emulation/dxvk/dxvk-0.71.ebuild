@@ -15,6 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="+abi_x86_32 +abi_x86_64 layers video_cards_amdgpu video_cards_intel video_cards_nvidia"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
+    app-emulation/winetricks
     dev-util/glslang
     layers? ( media-libs/vulkan-layers )
     video_cards_amdgpu? ( >=media-libs/mesa-18[vulkan] )
