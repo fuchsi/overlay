@@ -23,7 +23,6 @@ RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-sta
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
 >=dev-util/meson-0.43
-cross-x86_64-w64-mingw32/mingw64-runtime[libraries]
 dev-util/ninja"
 
 REQUIRED_USE="^^ ( video_cards_amdgpu video_cards_intel video_cards_nvidia )"
@@ -39,10 +38,9 @@ src_configure() {
         --wrap-mode nodownload
     )
     if use abi_x86_64; then
-        mesonargs+=(--cross-file build-win64.txt)
-        echo "win64"
+        mesonargs+=(--cross-file build-wine64.txt)        
     elif use abi_x86_32; then
-        mesonargs+=(--cross-file build-win32.txt)
+        mesonargs+=(--cross-file build-wine32.txt)
     fi
 
     # https://bugs.gentoo.org/625396
