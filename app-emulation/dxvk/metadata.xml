@@ -13,5 +13,6 @@
   </longdescription>
   <use>    
     <flag name="layers">Build the vulkan validation layers</flag>
+    <flag name="winelib">Use the winelib build</flag>
   </use>
 </pkgmetadata>

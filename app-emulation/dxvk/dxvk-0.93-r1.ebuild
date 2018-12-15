@@ -12,7 +12,7 @@ SRC_URI="https://github.com/doitsujin/dxvk/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="ZLIB"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="layers video_cards_amdgpu video_cards_intel video_cards_nvidia"
+IUSE="layers video_cards_amdgpu video_cards_intel video_cards_nvidia +winelib"
 
 RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-staging-3.10[vulkan] >=app-emulation/wine-d3d9-3.10[vulkan] >=app-emulation/wine-any-3.10[vulkan] )
     app-emulation/winetricks
@@ -23,7 +23,7 @@ RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-sta
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
 >=dev-util/meson-0.43
-cross-x86_64-w64-mingw32/mingw64-runtime[libraries]
+!winelib? ( >=cross-x86_64-w64-mingw32/mingw64-runtime-6.0.0[libraries] )
 dev-util/ninja"
 
 REQUIRED_USE="^^ ( video_cards_amdgpu video_cards_intel video_cards_nvidia )"
@@ -38,11 +38,18 @@ src_configure() {
         --sysconfdir "${EPREFIX}/etc"
         --wrap-mode nodownload
     )
-    if use abi_x86_64; then
-        mesonargs+=(--cross-file build-win64.txt)
-        echo "win64"
-    elif use abi_x86_32; then
-        mesonargs+=(--cross-file build-win32.txt)
+    if use winelib; then
+        if use abi_x86_64; then
+            mesonargs+=(--cross-file build-wine64.txt)
+        elif use abi_x86_32; then
+            mesonargs+=(--cross-file build-wine32.txt)
+        fi
+    else    
+        if use abi_x86_64; then
+            mesonargs+=(--cross-file build-win64.txt)
+        elif use abi_x86_32; then
+            mesonargs+=(--cross-file build-win32.txt)
+        fi
     fi
 
     # https://bugs.gentoo.org/625396
