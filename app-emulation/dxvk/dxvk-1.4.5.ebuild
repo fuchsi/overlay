@@ -22,7 +22,7 @@ RDEPEND="|| ( >=app-emulation/wine-vanilla-3.10[vulkan] >=app-emulation/wine-sta
     video_cards_intel? ( >=media-libs/mesa-18[vulkan] )
     video_cards_nvidia? ( >=x11-drivers/nvidia-drivers-396.24 )"
 DEPEND="${RDEPEND}
->=dev-util/meson-0.43
+>=dev-util/meson-0.46
 !winelib? ( >=cross-x86_64-w64-mingw32/mingw64-runtime-6.0.0[libraries] )
 dev-util/ninja"
 

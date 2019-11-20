@@ -11,8 +11,7 @@ My *private* Gentoo overlay.
 - net-wireless/aircrack-ng
 
 ### A working [dxvk](https://github.com/doitsujin/dxvk) ebuild
-- app-emulation/dxvk-0.92
-- app-emulation/dxvk-0.93
+- app-emulation/dxvk-1.4.5
 
 **Note**  
 The dxvk ebuild, until version **0.92**, has some quirks. It depends on `cross-x86_64-w64-mingw32/mingw64-runtime`, which does not exist in the normal portage tree.  
